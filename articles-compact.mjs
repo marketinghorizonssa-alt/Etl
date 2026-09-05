@@ -1,11 +1,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const cssPath = path.resolve('dist', 'assets', 'styles.css');
+const out = path.resolve('dist');
+const cssPath = path.join(out, 'assets', 'styles.css');
+const homePath = path.join(out, 'index.html');
 if (!fs.existsSync(cssPath)) process.exit(0);
 
+if (fs.existsSync(homePath)) {
+  let home = fs.readFileSync(homePath, 'utf8');
+  home = home.replace(/<div class="articles-all">[\s\S]*?<\/div>/g, '');
+  fs.writeFileSync(homePath, home);
+}
+
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'homepage-articles-compact-v1';
+const marker = 'homepage-articles-compact-v2';
 if (!css.includes(marker)) {
   css += `
 /* ${marker} */
@@ -22,12 +30,10 @@ if (!css.includes(marker)) {
 .seo-articles-home .seo-article-copy h3{font-size:.96rem!important;line-height:1.5!important;margin:0 0 6px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .seo-articles-home .seo-article-copy p{font-size:.8rem!important;line-height:1.6!important;margin:0 0 8px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .seo-articles-home .article-more{font-size:.8rem!important}
-.seo-articles-home .articles-all{margin-top:16px!important}
-.seo-articles-home .ghost-link{font-size:.84rem!important}
 @media(max-width:900px){.seo-articles-home{padding:32px 0!important}.seo-articles-home .seo-articles-grid{gap:14px!important}}
-@media(max-width:620px){.seo-articles-home{padding:28px 0!important}.seo-articles-home .section-heading{margin-bottom:14px!important}.seo-articles-home .seo-articles-grid{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}.seo-articles-home .seo-article-image{aspect-ratio:2.2/1!important}.seo-articles-home .seo-article-copy p{display:none!important}.seo-articles-home .articles-all{margin-top:14px!important}}
+@media(max-width:620px){.seo-articles-home{padding:28px 0!important}.seo-articles-home .section-heading{margin-bottom:14px!important}.seo-articles-home .seo-articles-grid{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}.seo-articles-home .seo-article-image{aspect-ratio:2.2/1!important}.seo-articles-home .seo-article-copy p{display:none!important}}
 `;
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Homepage articles section compacted.');
+console.log('Homepage articles section compacted and all-articles link removed.');
