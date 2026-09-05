@@ -20,7 +20,7 @@ for (const file of htmlFiles(out)) {
 
   html = html.replace(
     /<a class="contact-line(?: [^"]*)?" data-track="call" href="tel:\+966920029967">[\s\S]*?<\/a>/g,
-    '<a class="contact-line contact-phone-line" data-track="call" href="tel:+966920029967"><b class="contact-phone-label">تحدث إلينا</b><bdi class="contact-phone-number" dir="ltr">+966 920029967</bdi></a>'
+    '<a class="contact-line contact-phone-line" data-track="call" href="tel:+966920029967"><b class="contact-phone-label">تحدث إلينا</b><bdi class="contact-phone-number" dir="ltr">920029967</bdi></a>'
   );
 
   fs.writeFileSync(file, html);
@@ -33,4 +33,4 @@ if (!css.includes(marker)) {
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Footer phone visually aligned: Arabic label followed by phone at the far right.');
+console.log('Footer phone visually aligned: display 920029967; tel link keeps +966.');
