@@ -7,6 +7,7 @@ on:
       - 'build.mjs'
       - 'enhance.mjs'
       - 'legacy-footer.mjs'
+      - 'footer-layout.mjs'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/preview-pages.yml'
