@@ -1,0 +1,77 @@
+name: Build Etlaala
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-etlaala.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  patch-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Point canonical URLs to etlaala.net
+        shell: bash
+        run: |
+          sed -i 's#https://etlaala\.com#https://etlaala.net#g' build.mjs
+
+      - name: Commit domain correction
+        shell: bash
+        run: |
+          if git diff --quiet -- build.mjs; then
+            echo 'Domain already correct.'
+          else
+            git config user.name 'Etlaala Build Bot'
+            git config user.email 'actions@users.noreply.github.com'
+            git add build.mjs
+            git commit -m 'Use etlaala.net as canonical production domain'
+            git push origin HEAD:main
+          fi
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Verify generated site
+        shell: bash
+        run: |
+          test -f dist/index.html
+          test -f dist/sitemap.xml
+          test -f dist/robots.txt
+          test -f dist/llms.txt
+          ! grep -R 'https://etlaala.com' dist
+          grep -R 'GTM-MSF3NWFN' dist/index.html
+          grep -R 'whatsapp_click' dist/assets/main.js
+          grep -R 'call_click' dist/assets/main.js
+          grep -R 'form_submit' dist/assets/main.js
+          for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
+
+      - name: Package deploy artifact
+        shell: bash
+        run: |
+          cd dist
+          zip -r ../etlaala-net-dist.zip .
+
+      - name: Upload deploy artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: etlaala-net-dist
+          path: etlaala-net-dist.zip
+          if-no-files-found: error
+          retention-days: 7
