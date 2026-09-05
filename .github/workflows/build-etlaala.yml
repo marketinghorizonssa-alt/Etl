@@ -7,6 +7,7 @@ on:
       - 'build.mjs'
       - 'enhance.mjs'
       - 'legacy-footer.mjs'
+      - 'footer-layout.mjs'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/build-etlaala.yml'
@@ -50,6 +51,7 @@ jobs:
           grep -R 'سياسة الخصوصية - Privacy Policy' dist/index.html
           grep -R 'الشروط و الاحكام - terms and Conditions' dist/index.html
           grep -R '©2025, اطلالة' dist/index.html
+          grep -R 'legacy-footer-layout-polish-v2' dist/assets/styles.css
           for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
 
       - name: Package deploy artifact
