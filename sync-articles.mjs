@@ -2,102 +2,67 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const BASE = 'https://etlaala.com';
-const API = `${BASE}/wp-json/wp/v2/posts`;
 const OUT = path.resolve('data/articles.json');
 
-const topics = [
-  { key:'georgia', label:'جورجيا', landing:'/georgia/', rx:/جورجيا|georgia/i, max:3 },
-  { key:'malaysia', label:'ماليزيا', landing:'/malaysia/', rx:/ماليزيا|malaysia/i, max:3 },
-  { key:'maldives', label:'المالديف', landing:'/maldives/', rx:/المالديف|مالديف|maldives/i, max:2 },
-  { key:'thailand', label:'تايلاند', landing:'/thailand/', rx:/تايلاند|thailand|بانكوك|بوكيت|كرابي/i, max:3 },
-  { key:'turkiye', label:'تركيا', landing:'/turkiye/', rx:/تركيا|turkey|turkiye|اسطنبول|إسطنبول|طرابزون/i, max:3 },
-  { key:'bosnia', label:'البوسنة والهرسك', landing:'/bosnia-and-herzegovina/', rx:/البوسنة|البوسنه|bosnia|سراييفو/i, max:2 },
-  { key:'europe', label:'أوروبا', landing:'/europe/', rx:/أوروبا|اوروبا|europe|شنغن|سويسرا|إيطاليا|ايطاليا|فرنسا|النمسا|بريطانيا|لندن/i, max:2 }
+// Curated from the 2026-08-10 backup only. These posts support the landing-page clusters
+// without importing the full legacy archive or creating unnecessary index bloat.
+const selected = [
+  {id:10140,topic:'georgia',topicLabel:'جورجيا',landing:'/georgia/',seoScore:27},
+  {id:9967, topic:'georgia',topicLabel:'جورجيا',landing:'/georgia/',seoScore:24},
+  {id:10191,topic:'malaysia',topicLabel:'ماليزيا',landing:'/malaysia/',seoScore:26},
+  {id:10138,topic:'malaysia',topicLabel:'ماليزيا',landing:'/malaysia/',seoScore:27},
+  {id:10136,topic:'maldives',topicLabel:'المالديف',landing:'/maldives/',seoScore:27},
+  {id:10175,topic:'maldives',topicLabel:'المالديف',landing:'/maldives/',seoScore:25},
+  {id:10177,topic:'thailand',topicLabel:'تايلاند',landing:'/thailand/',seoScore:25},
+  {id:10176,topic:'thailand',topicLabel:'تايلاند',landing:'/thailand/',seoScore:25},
+  {id:10124,topic:'turkiye',topicLabel:'تركيا',landing:'/turkiye/',seoScore:27},
+  {id:10180,topic:'turkiye',topicLabel:'تركيا',landing:'/turkiye/',seoScore:25},
+  {id:10192,topic:'bosnia',topicLabel:'البوسنة والهرسك',landing:'/bosnia-and-herzegovina/',seoScore:26},
+  {id:10181,topic:'bosnia',topicLabel:'البوسنة والهرسك',landing:'/bosnia-and-herzegovina/',seoScore:25},
+  {id:9819, topic:'europe',topicLabel:'أوروبا',landing:'/europe/',seoScore:25},
+  {id:9821, topic:'europe',topicLabel:'أوروبا',landing:'/europe/',seoScore:23}
 ];
-const intentRx = /السياحة|سياحي|عروض|تكلفة|ميزانية|جدول|برنامج|أفضل|افضل|وقت|موسم|شهر العسل|تأشيرة|فيزا|تذاكر|طيران|السعوديين|السعودية|دليل|رحلة|رحلتي/i;
+const meta = new Map(selected.map(x => [x.id,x]));
+const ids = selected.map(x=>x.id).join(',');
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-async function fetchJson(url, attempt = 1) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 60000);
-  try {
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { 'accept':'application/json', 'user-agent':'EtlaalaMigration/1.0 (+https://etlaala.net)' }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-    return { data: await res.json(), headers: res.headers };
-  } catch (err) {
-    if (attempt >= 4) throw err;
-    await sleep(2500 * attempt);
-    return fetchJson(url, attempt + 1);
-  } finally { clearTimeout(timer); }
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+async function get(url, attempt=1){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),45000);
+  try{
+    const res=await fetch(url,{signal:ctrl.signal,headers:{accept:'application/json','user-agent':'EtlaalaMigration/1.0 (+https://etlaala.net)'}});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  }catch(err){
+    if(attempt>=3) throw err;
+    await sleep(2000*attempt);
+    return get(url,attempt+1);
+  }finally{clearTimeout(timer);}
 }
+function plain(html=''){return String(html).replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();}
+function firstImage(html=''){return String(html).match(/<img[^>]+src=["']([^"']+)["']/i)?.[1]||'';}
 
-function text(html='') {
-  return String(html).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&#\d+;/g,' ').replace(/\s+/g,' ').trim();
+const posts = await get(`${BASE}/wp-json/wp/v2/posts?include=${ids}&per_page=100&orderby=include&_embed=1`);
+const out=[];
+for(const post of posts){
+  const m=meta.get(post.id); if(!m) continue;
+  const media=post?._embedded?.['wp:featuredmedia']?.[0];
+  out.push({
+    ...m,
+    slug:post.slug,
+    path:`/${post.slug}/`,
+    date:post.date,
+    modified:post.modified,
+    oldLink:post.link,
+    title:post.title?.rendered||'',
+    excerpt:post.excerpt?.rendered||'',
+    content:post.content?.rendered||'',
+    featuredImage:media?.source_url||firstImage(post.content?.rendered||''),
+    featuredAlt:media?.alt_text||plain(post.title?.rendered||'')
+  });
 }
-function firstImage(html='') { return html.match(/<img[^>]+src=["']([^"']+)["']/i)?.[1] || ''; }
-function scorePost(post, topic) {
-  const title = text(post.title?.rendered || '');
-  const excerpt = text(post.excerpt?.rendered || '');
-  const body = text(post.content?.rendered || '');
-  if (!topic.rx.test(`${title} ${excerpt} ${body.slice(0,1200)}`)) return -1;
-  if (body.length < 350) return -1;
-  let score = topic.rx.test(title) ? 10 : 4;
-  if (intentRx.test(title)) score += 4;
-  if (/السعوديين|السعودية|من السعودية/i.test(title)) score += 3;
-  if (/تكلفة|جدول|أفضل|افضل|تأشيرة|فيزا|شهر العسل|عروض/i.test(title)) score += 3;
-  if (body.length > 1200) score += 2;
-  if (body.length > 2500) score += 1;
-  const ageDays = (Date.now() - new Date(post.modified || post.date).getTime()) / 86400000;
-  if (ageDays < 400) score += 2;
-  return score;
-}
-
-const all = [];
-let page = 1, totalPages = 1;
-while (page <= totalPages) {
-  const { data, headers } = await fetchJson(`${API}?status=publish&per_page=100&page=${page}&orderby=date&order=desc&_embed=1`);
-  totalPages = Number(headers.get('x-wp-totalpages') || 1);
-  all.push(...data);
-  page += 1;
-}
-
-const chosen = [];
-const used = new Set();
-for (const topic of topics) {
-  const ranked = all.map(post => ({ post, score: scorePost(post, topic) })).filter(x => x.score >= 0).sort((a,b) => b.score - a.score || new Date(b.post.modified) - new Date(a.post.modified));
-  let added = 0;
-  for (const {post, score} of ranked) {
-    if (used.has(post.id)) continue;
-    const media = post?._embedded?.['wp:featuredmedia']?.[0];
-    const oldLink = post.link || `${BASE}/${post.slug}/`;
-    chosen.push({
-      id: post.id,
-      slug: post.slug,
-      path: new URL(oldLink, BASE).pathname,
-      topic: topic.key,
-      topicLabel: topic.label,
-      landing: topic.landing,
-      seoScore: score,
-      date: post.date,
-      modified: post.modified,
-      oldLink,
-      title: post.title?.rendered || '',
-      excerpt: post.excerpt?.rendered || '',
-      content: post.content?.rendered || '',
-      featuredImage: media?.source_url || firstImage(post.content?.rendered || ''),
-      featuredAlt: media?.alt_text || text(post.title?.rendered || '')
-    });
-    used.add(post.id);
-    added += 1;
-    if (added >= topic.max) break;
-  }
-}
-
-chosen.sort((a,b) => b.seoScore - a.seoScore || new Date(b.modified) - new Date(a.modified));
-fs.mkdirSync(path.dirname(OUT), { recursive:true });
-fs.writeFileSync(OUT, JSON.stringify({ source:BASE, syncedAt:new Date().toISOString(), count:chosen.length, posts:chosen }, null, 2));
-console.log(`Selected ${chosen.length} SEO-supporting articles from ${all.length} published legacy posts.`);
+out.sort((a,b)=>b.seoScore-a.seoScore||new Date(b.modified)-new Date(a.modified));
+if(out.length < 10) throw new Error(`Only ${out.length} curated legacy articles were returned; expected most of 14.`);
+fs.mkdirSync(path.dirname(OUT),{recursive:true});
+fs.writeFileSync(OUT,JSON.stringify({source:'2026-08-10 curated legacy article set',count:out.length,posts:out},null,2));
+console.log(`Synced ${out.length} curated SEO articles from the fixed 2026-08-10 selection.`);
