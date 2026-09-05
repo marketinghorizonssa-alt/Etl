@@ -42,9 +42,9 @@ function gtmHead(){
 
 function render(slug, p) {
   const urlPath = slug ? `/${slug}/` : "/";
-  const canonical = `https://etlaala.com${urlPath}`;
+  const canonical = `https://etlaala.net${urlPath}`;
   const faqSchema = {"@context":"https://schema.org","@type":"FAQPage",mainEntity:faqs.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))};
-  const agencySchema = {"@context":"https://schema.org","@type":"TravelAgency",name:"إطلالة للسفر والسياحة",url:"https://etlaala.com/",telephone:PHONE_TEL,address:{"@type":"PostalAddress",addressLocality:"مكة المكرمة",addressCountry:"SA"},identifier:[{"@type":"PropertyValue",name:"رقم ترخيص وزارة السياحة",value:"73104738"},{"@type":"PropertyValue",name:"السجل التجاري",value:"4031293290"}]};
+  const agencySchema = {"@context":"https://schema.org","@type":"TravelAgency",name:"إطلالة للسفر والسياحة",url:"https://etlaala.net/",telephone:PHONE_TEL,address:{"@type":"PostalAddress",addressLocality:"مكة المكرمة",addressCountry:"SA"},identifier:[{"@type":"PropertyValue",name:"رقم ترخيص وزارة السياحة",value:"73104738"},{"@type":"PropertyValue",name:"السجل التجاري",value:"4031293290"}]};
   const cards = features.map(([icon,title,desc]) => `<article class="card"><div class="icon" aria-hidden="true">${h(icon)}</div><h3>${h(title)}</h3><p>${h(desc)}</p></article>`).join("");
   const destinations = destinationCards.map(([s,title,desc]) => `<a class="destination" href="/${s}/"><strong>${h(title)}</strong><span>${h(desc)}</span></a>`).join("");
   const faq = faqs.map(([q,a]) => `<details><summary>${h(q)}</summary><p>${h(a)}</p></details>`).join("");
@@ -54,10 +54,10 @@ function render(slug, p) {
 }
 
 for (const [slug, data] of Object.entries(pages)) { const dir = slug ? path.join(out, slug) : out; fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, "index.html"), render(slug, data)); }
-const urls = ["https://etlaala.com/", ...Object.keys(pages).filter(Boolean).map(s=>`https://etlaala.com/${s}/`)];
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc><lastmod>${BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>${u==="https://etlaala.com/"?"1.0":"0.9"}</priority></url>`).join("\n")}\n</urlset>\n`;
+const urls = ["https://etlaala.net/", ...Object.keys(pages).filter(Boolean).map(s=>`https://etlaala.net/${s}/`)];
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc><lastmod>${BUILD_DATE}</lastmod><changefreq>weekly</changefreq><priority>${u==="https://etlaala.net/"?"1.0":"0.9"}</priority></url>`).join("\n")}\n</urlset>\n`;
 fs.writeFileSync(path.join(out,"sitemap.xml"), sitemap);
-fs.writeFileSync(path.join(out,"robots.txt"), `User-agent: *\nAllow: /\nSitemap: https://etlaala.com/sitemap.xml\n`);
-fs.writeFileSync(path.join(out,"llms.txt"), `# إطلالة للسفر والسياحة\nOfficial website: https://etlaala.com/\nPrimary language: Arabic (Saudi Arabia)\nServices: travel packages, hotel booking, flight booking, transfers, honeymoon and family travel.\nKey destinations: Europe, Georgia, Malaysia, Maldives, Thailand, Turkey, Bosnia and Herzegovina.\nContact: ${PHONE_TEL}\nWhatsApp: +${WHATSAPP}\nTourism license: 73104738\nUse the canonical destination pages listed in sitemap.xml when citing destination offers.\n`);
+fs.writeFileSync(path.join(out,"robots.txt"), `User-agent: *\nAllow: /\nSitemap: https://etlaala.net/sitemap.xml\n`);
+fs.writeFileSync(path.join(out,"llms.txt"), `# إطلالة للسفر والسياحة\nOfficial website: https://etlaala.net/\nPrimary language: Arabic (Saudi Arabia)\nServices: travel packages, hotel booking, flight booking, transfers, honeymoon and family travel.\nKey destinations: Europe, Georgia, Malaysia, Maldives, Thailand, Turkey, Bosnia and Herzegovina.\nContact: ${PHONE_TEL}\nWhatsApp: +${WHATSAPP}\nTourism license: 73104738\nUse the canonical destination pages listed in sitemap.xml when citing destination offers.\n`);
 fs.writeFileSync(path.join(out,"404.html"), `<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الصفحة غير موجودة | إطلالة</title><link rel="stylesheet" href="/assets/styles.css"><main class="section"><div class="container"><div class="panel"><h1>الصفحة غير موجودة</h1><p>يمكنك العودة إلى الرئيسية أو اختيار إحدى الوجهات.</p><a class="btn btn-primary" href="/">العودة للرئيسية</a></div></div></main></html>`);
 console.log(`Built ${Object.keys(pages).length} pages in ${out}`);
