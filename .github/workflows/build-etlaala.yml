@@ -6,6 +6,7 @@ on:
     paths:
       - 'build.mjs'
       - 'enhance.mjs'
+      - 'legacy-footer.mjs'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/build-etlaala.yml'
@@ -45,6 +46,10 @@ jobs:
           grep -R 'class="dest-menu"' dist/index.html
           grep -R 'class="float-btn float-wa"' dist/index.html
           grep -R 'class="float-btn float-call"' dist/index.html
+          grep -R 'class="legacy-footer"' dist/index.html
+          grep -R 'سياسة الخصوصية - Privacy Policy' dist/index.html
+          grep -R 'الشروط و الاحكام - terms and Conditions' dist/index.html
+          grep -R '©2025, اطلالة' dist/index.html
           for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
 
       - name: Package deploy artifact
