@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.mjs && node enhance.mjs && node legacy-footer.mjs && node footer-layout.mjs"
+    "build": "node build.mjs && node enhance.mjs && node legacy-footer.mjs && node footer-layout.mjs && node sync-articles.mjs && node articles.mjs"
   }
 }
