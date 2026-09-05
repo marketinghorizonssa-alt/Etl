@@ -6,6 +6,7 @@ on:
     paths:
       - 'build.mjs'
       - 'enhance.mjs'
+      - 'legacy-footer.mjs'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/preview-pages.yml'
