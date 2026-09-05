@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'build.mjs'
+      - 'enhance.mjs'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/build-etlaala.yml'
@@ -35,12 +36,15 @@ jobs:
           test -f dist/sitemap.xml
           test -f dist/robots.txt
           test -f dist/llms.txt
-          ! grep -R 'https://etlaala.com' dist
+          ! grep -R '<link rel="canonical" href="https://etlaala.com' dist
           grep -R 'https://etlaala.net' dist/index.html
           grep -R 'GTM-MSF3NWFN' dist/index.html
           grep -R 'whatsapp_click' dist/assets/main.js
           grep -R 'call_click' dist/assets/main.js
           grep -R 'form_submit' dist/assets/main.js
+          grep -R 'class="dest-menu"' dist/index.html
+          grep -R 'class="float-btn float-wa"' dist/index.html
+          grep -R 'class="float-btn float-call"' dist/index.html
           for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
 
       - name: Package deploy artifact
