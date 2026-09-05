@@ -18,21 +18,20 @@ function htmlFiles(dir) {
 for (const file of htmlFiles(out)) {
   let html = fs.readFileSync(file, 'utf8');
 
-  // Replace the generated call row regardless of whether earlier scripts changed
-  // the displayed number, span attributes, classes, or whitespace.
+  // Normalize any generated call row to a stable Arabic label + isolated LTR number.
   html = html.replace(
     /<a class="contact-line(?: [^"]*)?" data-track="call" href="tel:\+966920029967">[\s\S]*?<\/a>/g,
-    '<a class="contact-line contact-phone-line" data-track="call" href="tel:+966920029967"><b>تحدث إلينا</b><bdi class="contact-phone-number" dir="ltr">920029967</bdi></a>'
+    '<a class="contact-line contact-phone-line" data-track="call" href="tel:+966920029967"><b>تحدث إلينا</b><bdi class="contact-phone-number" dir="ltr">+966 9200 29967</bdi></a>'
   );
 
   fs.writeFileSync(file, html);
 }
 
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'footer-phone-fix-v2';
+const marker = 'footer-phone-fix-v3';
 if (!css.includes(marker)) {
-  css += `\n/* ${marker} */\n.compact-contact .contact-phone-line{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:8px!important;width:max-content!important;max-width:100%!important;padding:7px 0!important;direction:rtl!important;grid-template-columns:none!important}.compact-contact .contact-phone-line b{margin:0!important;white-space:nowrap!important;font-size:14px!important;line-height:1.5!important}.compact-contact .contact-phone-number{display:inline-block!important;direction:ltr!important;unicode-bidi:isolate!important;white-space:nowrap!important;font-size:15px!important;font-weight:800!important;letter-spacing:.15px!important;line-height:1.5!important;color:#fff!important}.compact-contact .contact-phone-line span{width:auto!important}@media(max-width:640px){.compact-contact .contact-phone-line{gap:7px!important}.compact-contact .contact-phone-number{font-size:14px!important}}\n`;
+  css += `\n/* ${marker} */\n.compact-contact .contact-phone-line{display:flex!important;flex-direction:row!important;align-items:baseline!important;justify-content:flex-start!important;gap:10px!important;width:100%!important;max-width:100%!important;padding:7px 0!important;direction:rtl!important;grid-template-columns:none!important}.compact-contact .contact-phone-line b{margin:0!important;white-space:nowrap!important;font-size:14px!important;font-weight:800!important;line-height:1.5!important}.compact-contact .contact-phone-number{display:inline-block!important;direction:ltr!important;unicode-bidi:isolate!important;white-space:nowrap!important;font-size:14px!important;font-weight:700!important;letter-spacing:0!important;line-height:1.5!important;color:#fff!important}.compact-contact .contact-phone-line span{width:auto!important}@media(max-width:640px){.compact-contact .contact-phone-line{gap:8px!important;justify-content:flex-start!important}.compact-contact .contact-phone-number{font-size:13px!important}}\n`;
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Footer phone row normalized to local display number 920029967 with stable RTL/LTR layout.');
+console.log('Footer phone row fixed: تحدث إلينا +966 9200 29967 with stable RTL/LTR ordering.');
