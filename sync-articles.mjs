@@ -73,16 +73,18 @@ for (const topic of topics) {
   for (const {post, score} of ranked) {
     if (used.has(post.id)) continue;
     const media = post?._embedded?.['wp:featuredmedia']?.[0];
+    const oldLink = post.link || `${BASE}/${post.slug}/`;
     chosen.push({
       id: post.id,
       slug: post.slug,
+      path: new URL(oldLink, BASE).pathname,
       topic: topic.key,
       topicLabel: topic.label,
       landing: topic.landing,
       seoScore: score,
       date: post.date,
       modified: post.modified,
-      oldLink: post.link,
+      oldLink,
       title: post.title?.rendered || '',
       excerpt: post.excerpt?.rendered || '',
       content: post.content?.rendered || '',
