@@ -16,6 +16,10 @@ on:
       - '.github/workflows/build-etlaala.yml'
   workflow_dispatch:
 
+concurrency:
+  group: build-etlaala
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: '22'
 
