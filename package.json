@@ -4,6 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.mjs && node enhance.mjs && node legacy-footer.mjs && node footer-layout.mjs && node sync-articles.mjs && node articles.mjs && node reviews.mjs && node final-polish.mjs && node campaign-keywords.mjs && node full-keyword-coverage.mjs && node form-privacy.mjs"
+    "build": "node build.mjs && node enhance.mjs && node legacy-footer.mjs && node footer-layout.mjs && node sync-articles.mjs && node articles.mjs && node reviews.mjs && node final-polish.mjs && node campaign-keywords.mjs && node full-keyword-coverage.mjs && node form-privacy.mjs && node brand-refresh.mjs"
   }
 }
