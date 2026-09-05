@@ -4,12 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'build.mjs'
-      - 'enhance.mjs'
-      - 'legacy-footer.mjs'
-      - 'footer-layout.mjs'
-      - 'sync-articles.mjs'
-      - 'articles.mjs'
+      - '*.mjs'
       - 'data/**'
       - 'package.json'
       - 'public/**'
