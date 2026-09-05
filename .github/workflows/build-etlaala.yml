@@ -8,6 +8,9 @@ on:
       - 'enhance.mjs'
       - 'legacy-footer.mjs'
       - 'footer-layout.mjs'
+      - 'sync-articles.mjs'
+      - 'articles.mjs'
+      - 'data/**'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/build-etlaala.yml'
@@ -55,6 +58,10 @@ jobs:
           grep -R 'سياسة الخصوصية' dist/index.html
           grep -R 'الشروط والأحكام' dist/index.html
           grep -R 'compact-footer-v3' dist/assets/styles.css
+          grep -R 'id="articles"' dist/index.html
+          test -f dist/articles/index.html
+          grep -R 'seo-articles-curated-v1' dist/assets/styles.css
+          test -s data/articles.json
           for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
 
       - name: Package deploy artifact
