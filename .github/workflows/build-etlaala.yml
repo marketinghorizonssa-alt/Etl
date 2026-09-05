@@ -4,46 +4,26 @@ on:
   push:
     branches: [main]
     paths:
+      - 'build.mjs'
+      - 'package.json'
+      - 'public/**'
       - '.github/workflows/build-etlaala.yml'
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 env:
   NODE_VERSION: '22'
 
 jobs:
-  patch-and-build:
+  build-and-verify:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Point canonical URLs to etlaala.net
-        shell: bash
-        run: |
-          sed -i 's#https://etlaala\.com#https://etlaala.net#g' build.mjs
-
-      - name: Commit domain correction
-        shell: bash
-        run: |
-          if git diff --quiet -- build.mjs; then
-            echo 'Domain already correct.'
-          else
-            git config user.name 'Etlaala Build Bot'
-            git config user.email 'actions@users.noreply.github.com'
-            git add build.mjs
-            git commit -m 'Use etlaala.net as canonical production domain'
-            git push origin HEAD:main
-          fi
 
       - name: Build static site
         run: npm run build
@@ -56,6 +36,7 @@ jobs:
           test -f dist/robots.txt
           test -f dist/llms.txt
           ! grep -R 'https://etlaala.com' dist
+          grep -R 'https://etlaala.net' dist/index.html
           grep -R 'GTM-MSF3NWFN' dist/index.html
           grep -R 'whatsapp_click' dist/assets/main.js
           grep -R 'call_click' dist/assets/main.js
