@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'build.mjs'
+      - 'enhance.mjs'
       - 'package.json'
       - 'public/**'
       - '.github/workflows/preview-pages.yml'
