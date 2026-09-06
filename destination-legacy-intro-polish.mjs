@@ -10,6 +10,8 @@ const pages = [
 const introImages = {
   georgia: 'https://etlaala.com/wp-content/uploads/2025/07/%D8%AC%D9%88%D8%B1%D8%AC%D9%8A%D8%A7-1-1-768x1273.png',
   'georgia-2': 'https://etlaala.com/wp-content/uploads/2025/07/%D8%AC%D9%88%D8%B1%D8%AC%D9%8A%D8%A7-1-1-768x1273.png',
+  malaysia: 'https://etlaala.com/wp-content/uploads/2025/06/%D9%85%D8%A7%D9%84%D9%8A%D8%B2%D9%8A%D8%A7.png-2-1-768x1273.png',
+  'malaysia-2': 'https://etlaala.com/wp-content/uploads/2025/06/%D9%85%D8%A7%D9%84%D9%8A%D8%B2%D9%8A%D8%A7.png-2-1-768x1273.png',
   maldives: 'https://etlaala.com/wp-content/uploads/2025/06/%D8%A7%D9%84%D9%85%D8%A7%D9%84%D8%AF%D9%8A%D9%81-768x1273.webp',
   'maldives-2': 'https://etlaala.com/wp-content/uploads/2025/06/%D8%A7%D9%84%D9%85%D8%A7%D9%84%D8%AF%D9%8A%D9%81-768x1273.webp',
   thailand: 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%A7%D9%8A%D9%84%D8%A7%D9%86%D8%AF-1-768x1273.webp',
