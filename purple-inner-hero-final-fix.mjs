@@ -2,15 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
-const sourcePath = path.resolve('purple-inner-hero-upload.b64');
-if (!fs.existsSync(cssPath) || !fs.existsSync(sourcePath)) process.exit(0);
+const assetPath = path.resolve('dist', 'assets', 'purple-inner-hero.webp');
+if (!fs.existsSync(cssPath)) process.exit(0);
+if (!fs.existsSync(assetPath)) throw new Error('purple-inner-hero.webp was not copied to dist/assets.');
 
-const encoded = fs.readFileSync(sourcePath, 'utf8').trim();
-if (!encoded) throw new Error('Preferred purple hero image source is empty.');
-
-const HERO = `data:image/webp;base64,${encoded}`;
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'purple-inner-hero-final-fix-v6';
+const marker = 'purple-inner-hero-final-fix-v7';
 
 if (!css.includes(marker)) {
   css += `
@@ -20,7 +17,7 @@ if (!css.includes(marker)) {
   overflow:hidden!important;
   color:#fff!important;
   background-color:#263fc6!important;
-  background-image:url("${HERO}")!important;
+  background-image:url("./purple-inner-hero.webp")!important;
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
@@ -55,7 +52,7 @@ if (!css.includes(marker)) {
 }
 @media(max-width:680px){
   .legal-hero,.branch-page-hero,.service-page-hero{
-    background-image:url("${HERO}")!important;
+    background-image:url("./purple-inner-hero.webp")!important;
     background-position:center center!important;
   }
 }
@@ -63,4 +60,4 @@ if (!css.includes(marker)) {
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Embedded the preferred purple Santorini cover directly into every legal, branch and service page hero.');
+console.log('Applied the real Santorini hero asset to all legal, branch and service pages.');
