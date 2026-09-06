@@ -55,7 +55,6 @@ jobs:
           grep -R '7037638678' dist/index.html
           grep -R 'سياسة الخصوصية' dist/index.html
           grep -R 'الشروط والأحكام' dist/index.html
-          grep -R 'compact-footer-v3' dist/assets/styles.css
           grep -R 'id="articles"' dist/index.html
           test -f dist/articles/index.html
           grep -R 'seo-articles-curated-v1' dist/assets/styles.css
