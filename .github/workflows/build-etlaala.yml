@@ -46,7 +46,7 @@ jobs:
           grep -R 'whatsapp_click' dist/assets/main.js
           grep -R 'call_click' dist/assets/main.js
           grep -R 'form_submit' dist/assets/main.js
-          grep -R 'class="dest-menu"' dist/index.html
+          grep -R 'class="navlinks navlinks-unified"' dist/index.html
           grep -R 'class="float-btn float-wa"' dist/index.html
           grep -R 'class="float-btn float-call"' dist/index.html
           grep -R 'class="compact-footer"' dist/index.html
@@ -62,6 +62,9 @@ jobs:
           grep -R 'seo-articles-curated-v1' dist/assets/styles.css
           test -s data/articles.json
           for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
+          grep -R 'data-premium-destination="turkiye"' dist/turkiye/index.html
+          for p in europe georgia malaysia maldives thailand bosnia-and-herzegovina; do grep -R 'data-premium-destination=' "dist/$p/index.html"; grep -R 'id="destination-quote-form"' "dist/$p/index.html"; done
+          grep -R 'destination-premium-rollout-v1' dist/assets/styles.css
 
       - name: Package deploy artifact
         shell: bash
