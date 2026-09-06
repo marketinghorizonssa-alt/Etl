@@ -1,0 +1,31 @@
+name: Test Etlaala lead endpoint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-lead-endpoint.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post test lead
+        shell: bash
+        run: |
+          response=$(curl -sS -L -X POST 'https://script.google.com/macros/s/AKfycbw7aNMwjKJdv3NJLro8hwUxRrVqx8CFKmc_ABHIRk3cGynXRkzKhE9Y3yDpr5k8mVPX/exec' \
+            --data-urlencode 'name=TEST ChatGPT' \
+            --data-urlencode 'phone=0555555555' \
+            --data-urlencode 'destination=اختبار الربط' \
+            --data-urlencode 'travelers=2' \
+            --data-urlencode 'travel_date=2026-09-10' \
+            --data-urlencode 'notes=Integration test from GitHub Actions' \
+            --data-urlencode 'page_path=/integration-test/' \
+            --data-urlencode 'page_url=https://marketinghorizonssa-alt.github.io/Etl/integration-test/' \
+            --data-urlencode 'privacy_consent=yes' \
+            --data-urlencode 'source=Integration Test' \
+            --data-urlencode 'utm_source=github_actions' \
+            --data-urlencode 'utm_medium=test' \
+            --data-urlencode 'utm_campaign=sheet_connection')
+          echo "Receiver response: $response"
+          test "$response" = "ok"
