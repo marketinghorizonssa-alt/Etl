@@ -3,20 +3,24 @@ import path from 'node:path';
 
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
 const assetPath = path.resolve('dist', 'assets', 'purple-inner-hero-hq.webp');
-const b64Path = path.resolve('hero-hq2-part-00.b64');
+const parts = [0,1,2,3,4].map(i => path.resolve(`hero-hq-part-0${i}.b64`));
 
 if (!fs.existsSync(cssPath)) process.exit(0);
-if (!fs.existsSync(b64Path)) throw new Error('HQ hero base64 source is missing.');
+for (const file of parts) {
+  if (!fs.existsSync(file)) throw new Error(`HQ hero chunk missing: ${path.basename(file)}`);
+}
 
-const raw = fs.readFileSync(b64Path, 'utf8').trim();
+const raw = parts.map(file => fs.readFileSync(file, 'utf8').trim()).join('');
 const image = Buffer.from(raw, 'base64');
-if (image.length < 100000 || image.subarray(0,4).toString('ascii') !== 'RIFF' || image.subarray(8,12).toString('ascii') !== 'WEBP') {
-  throw new Error(`Invalid HQ WebP asset (${image.length} bytes).`);
+const isWebp = image.length > 50000 && image.subarray(0,4).toString('ascii') === 'RIFF' && image.subarray(8,12).toString('ascii') === 'WEBP';
+const declaredSize = isWebp && image.length >= 12 ? image.readUInt32LE(4) + 8 : 0;
+if (!isWebp || declaredSize !== image.length) {
+  throw new Error(`Invalid/incomplete HQ WebP asset (${image.length} bytes, declared ${declaredSize}).`);
 }
 fs.writeFileSync(assetPath, image);
 
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'purple-inner-hero-final-fix-v8-hq';
+const marker = 'purple-inner-hero-final-fix-v9-hq-complete';
 
 css += `
 /* ${marker} */
@@ -25,7 +29,7 @@ css += `
   overflow:hidden!important;
   color:#fff!important;
   background-color:#263fc6!important;
-  background-image:url("./purple-inner-hero-hq.webp?v=8")!important;
+  background-image:url("./purple-inner-hero-hq.webp?v=9")!important;
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
@@ -56,12 +60,12 @@ css += `
 }
 @media(max-width:680px){
   .legal-hero,.branch-page-hero,.service-page-hero{
-    background-image:url("./purple-inner-hero-hq.webp?v=8")!important;
-    background-position:32% center!important;
+    background-image:url("./purple-inner-hero-hq.webp?v=9")!important;
+    background-position:34% center!important;
     background-size:cover!important;
   }
 }
 `;
 
 fs.writeFileSync(cssPath, css);
-console.log(`Applied HQ Santorini hero (${image.length} bytes) to legal, branch and service pages.`);
+console.log(`Applied complete HQ hero (${image.length} bytes) to legal, branch and service pages.`);
