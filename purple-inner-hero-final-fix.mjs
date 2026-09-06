@@ -9,14 +9,13 @@ let css = fs.readFileSync(cssPath, 'utf8');
 const purpleSource = fs.readFileSync(purpleSourcePath, 'utf8');
 
 // Read the exact original purple artwork directly from the source script.
-// This avoids any dependency on earlier CSS transforms or marker state.
-const imageMatch = purpleSource.match(/const\s+heroImage\s*=\s*['"](data:image\/webp;base64,[A-Za-z0-9+/=]+)['"]/i);
+const imageMatch = purpleSource.match(/data:image\/webp;base64,[^'"\r\n]+/i);
 if (!imageMatch) {
   throw new Error('Original purple generated hero image was not found in purple-hero-image.mjs.');
 }
 
-const HERO = imageMatch[1];
-const marker = 'purple-inner-hero-final-fix-v3';
+const HERO = imageMatch[0];
+const marker = 'purple-inner-hero-final-fix-v4';
 
 if (!css.includes(marker)) {
   css += `
