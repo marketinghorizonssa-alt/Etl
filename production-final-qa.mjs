@@ -17,8 +17,20 @@ function plain(value = '') {
   return String(value).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+const legacyRouteMap = new Map([
+  ['/skiing-georgia-winter-tourism-2026/', '/georgia/'],
+  ['/السياحة-في-جورجيا/', '/georgia/'],
+  ['/بكج-سفر-جورجيا/', '/georgia/'],
+  ['/kazbegi-georgia-tourism-guide-2026/', '/georgia/'],
+  ['/kutaisi-georgia-tourism-guide-2026/', '/georgia/'],
+  ['/saudi-passport-visa-free-countries-2026/', '/articles/'],
+  ['/summer-2026-family-egypt-turkey-malaysia/', '/malaysia/'],
+  ['/honeymoon-packages-winter-2026/', '/رحلات-الكروز-وشهر-العسل/']
+]);
+
 let changed = 0;
 let normalizedPreviewLinks = 0;
+let legacyLinksFixed = 0;
 let duplicateH1Removed = 0;
 let stalePreloadsRemoved = 0;
 
@@ -35,6 +47,16 @@ for (const file of walk(out)) {
     normalizedPreviewLinks += 1;
     return `${attr}=${q}/${q}`;
   });
+
+  // Replace links to legacy articles/pages that are intentionally not part of the new site.
+  for (const [from, to] of legacyRouteMap) {
+    const escaped = from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`href=(['"])${escaped}(?:#[^'"]*)?\\1`, 'gi');
+    html = html.replace(re, (_m, q) => {
+      legacyLinksFixed += 1;
+      return `href=${q}${to}${q}`;
+    });
+  }
 
   // Keep a single H1 on article pages when the imported content repeats the article title.
   const headerTitle = html.match(/<header class="article-head">[\s\S]*?<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1];
@@ -55,7 +77,8 @@ for (const file of walk(out)) {
     const href = tag.match(/href=["']([^"']+)["']/i)?.[1];
     if (!href) continue;
     const withoutTag = html.replace(tag, '');
-    const usedInImg = new RegExp(`<img\\b[^>]*src=["']${href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']`, 'i').test(withoutTag);
+    const escapedHref = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const usedInImg = new RegExp(`<img\\b[^>]*src=["']${escapedHref}["']`, 'i').test(withoutTag);
     if (!usedInImg || seenPreloads.has(href)) {
       html = html.replace(tag, '');
       stalePreloadsRemoved += 1;
@@ -77,4 +100,4 @@ for (const file of walk(out)) {
   }
 }
 
-console.log(`Final production QA updated ${changed} page(s): normalized ${normalizedPreviewLinks} preview link(s), removed ${duplicateH1Removed} duplicate H1(s), removed ${stalePreloadsRemoved} stale/duplicate image preload(s).`);
+console.log(`Final production QA updated ${changed} page(s): normalized ${normalizedPreviewLinks} preview link(s), fixed ${legacyLinksFixed} legacy link(s), removed ${duplicateH1Removed} duplicate H1(s), removed ${stalePreloadsRemoved} stale/duplicate image preload(s).`);
