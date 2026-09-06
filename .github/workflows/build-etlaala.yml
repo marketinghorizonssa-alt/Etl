@@ -53,7 +53,6 @@ jobs:
           grep -R '73104738' dist/index.html
           grep -R '4031293290' dist/index.html
           grep -R '7037638678' dist/index.html
-          grep -R 'طرق-الدفع-1024x512.png' dist/index.html
           grep -R 'سياسة الخصوصية' dist/index.html
           grep -R 'الشروط والأحكام' dist/index.html
           grep -R 'compact-footer-v3' dist/assets/styles.css
@@ -61,10 +60,13 @@ jobs:
           test -f dist/articles/index.html
           grep -R 'seo-articles-curated-v1' dist/assets/styles.css
           test -s data/articles.json
-          for p in europe georgia georgia-2 malaysia malaysia-2 maldives maldives-2 thailand thailand-2 turkiye turkey-2 bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
+          for p in europe georgia malaysia maldives thailand turkiye bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
+          for p in georgia-2 malaysia-2 maldives-2 thailand-2 turkey-2; do test ! -e "dist/$p"; done
           grep -R 'data-premium-destination="turkiye"' dist/turkiye/index.html
           for p in europe georgia malaysia maldives thailand bosnia-and-herzegovina; do grep -R 'data-premium-destination=' "dist/$p/index.html"; grep -R 'id="destination-quote-form"' "dist/$p/index.html"; done
           grep -R 'destination-premium-rollout-v1' dist/assets/styles.css
+          find dist/assets/media -type f -print -quit | grep -q .
+          ! grep -R 'https://etlaala.com/wp-content/uploads' dist
 
       - name: Package deploy artifact
         shell: bash
