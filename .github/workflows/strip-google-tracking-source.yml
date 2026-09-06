@@ -1,0 +1,68 @@
+name: Strip Google tracking from GitHub source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/strip-google-tracking-source.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  strip-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove production Google tracking from repository source
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          build = Path('build.mjs')
+          text = build.read_text(encoding='utf-8')
+
+          text = text.replace('const GTM_ID = "GTM-MSF3NWFN";\n', '')
+          text = re.sub(r'^function gtmHead\(\)\{return .*?\;}\n', '', text, flags=re.M)
+          text = text.replace('${gtmHead()}', '')
+          text = text.replace('<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>', '')
+
+          build.write_text(text, encoding='utf-8')
+
+          verify = Path('.github/workflows/build-etlaala.yml')
+          v = verify.read_text(encoding='utf-8')
+          v = v.replace("          grep -R 'GTM-MSF3NWFN' dist/index.html\n", '')
+          verify.write_text(v, encoding='utf-8')
+          PY
+
+      - name: Verify Google tracking is absent from repository source
+        shell: bash
+        run: |
+          if grep -R -n --exclude-dir=.git --exclude='strip-google-tracking-source.yml' \
+            -E 'GTM-MSF3NWFN|AW-16884217264|https://www\.googletagmanager\.com/gtm\.js|https://www\.googletagmanager\.com/gtag/js' .; then
+            echo 'A production Google tracking reference is still present in GitHub source.' >&2
+            exit 1
+          fi
+
+          node --check build.mjs
+
+      - name: Commit source cleanup
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add build.mjs .github/workflows/build-etlaala.yml
+          git commit -m 'Keep Google tracking only on production Hostinger site'
+          git push origin HEAD:main
