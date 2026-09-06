@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const out = path.resolve('dist');
 const cssPath = path.join(out, 'assets', 'styles.css');
-const marker = 'thailand-mobile-cover-final-v1';
+const marker = 'thailand-mobile-cover-final-v2';
 const THAILAND_COVER = 'https://etlaala.com/wp-content/uploads/2025/02/Koh-Tao-1.webp';
 
 function patchHeroImage(relativePath) {
@@ -35,19 +35,51 @@ function patchHeroImage(relativePath) {
 const cssFix = `
 /* ${marker} */
 @media(max-width:760px){
+  /* Thailand only: shorten the scenic cover so the CTA buttons stay visible sooner. */
   .dp-page[data-premium-destination="thailand"] .dp-hero>img,
   body.mobile-target-thailand .dp-hero>img,
   .dp-th .dp-hero>img,
   body[data-destination="تايلاند"] .destination-hero .hero-photo{
+    height:clamp(180px,27svh,210px)!important;
+    min-height:0!important;
+    max-height:clamp(180px,27svh,210px)!important;
     object-fit:cover!important;
     object-position:center 54%!important;
     transform:none!important;
     filter:none!important;
   }
+
   .dp-page[data-premium-destination="thailand"] .dp-hero-overlay,
   body.mobile-target-thailand .dp-hero-overlay,
   body[data-destination="تايلاند"] .destination-hero .hero-overlay{
+    height:clamp(180px,27svh,210px)!important;
+    max-height:clamp(180px,27svh,210px)!important;
     background:linear-gradient(180deg,rgba(5,15,52,.08) 0%,rgba(5,15,52,.20) 45%,rgba(5,15,52,.70) 100%)!important;
+  }
+
+  .dp-page[data-premium-destination="thailand"] .dp-hero-wrap,
+  .dp-th .dp-hero-wrap,
+  body[data-destination="تايلاند"] .destination-hero .destination-hero-content{
+    margin-top:-42px!important;
+  }
+}
+
+@media(max-width:420px){
+  .dp-page[data-premium-destination="thailand"] .dp-hero>img,
+  body.mobile-target-thailand .dp-hero>img,
+  .dp-th .dp-hero>img,
+  body[data-destination="تايلاند"] .destination-hero .hero-photo,
+  .dp-page[data-premium-destination="thailand"] .dp-hero-overlay,
+  body.mobile-target-thailand .dp-hero-overlay,
+  body[data-destination="تايلاند"] .destination-hero .hero-overlay{
+    height:180px!important;
+    max-height:180px!important;
+  }
+
+  .dp-page[data-premium-destination="thailand"] .dp-hero-wrap,
+  .dp-th .dp-hero-wrap,
+  body[data-destination="تايلاند"] .destination-hero .destination-hero-content{
+    margin-top:-36px!important;
   }
 }
 `;
@@ -72,4 +104,4 @@ for (const relativePath of ['thailand', 'thailand-2']) {
 }
 
 const patched = ['thailand', 'thailand-2'].filter(patchHeroImage);
-console.log(`Thailand mobile cover image finalized for: ${patched.join(', ') || 'none'}; inline styles on ${patchedStyles} page(s).`);
+console.log(`Thailand mobile cover shortened for: ${patched.join(', ') || 'none'}; inline styles on ${patchedStyles} page(s).`);
