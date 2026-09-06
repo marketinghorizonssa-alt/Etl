@@ -8,13 +8,14 @@ const pages = [
 ];
 
 const turkiyeImage = 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%B1%D9%83%D9%8A%D8%A7-768x1273.webp';
-const marker = 'legacy-intro-polish-v3';
-const oldMarkers = ['legacy-intro-polish-v2', 'legacy-intro-polish-v3'];
+const marker = 'legacy-intro-polish-v4';
+const oldMarkers = ['legacy-intro-polish-v2', 'legacy-intro-polish-v3', 'legacy-intro-polish-v4'];
 
 const style = `
 <style id="${marker}">
 .legacy-destination-intro{
   padding:58px 0 62px!important;
+  background:#f3f4f8!important;
 }
 .legacy-intro-grid{
   align-items:center!important;
@@ -60,7 +61,7 @@ const style = `
 .legacy-intro-consult{
   margin-top:24px!important;
   padding-top:22px!important;
-  border-top:1px solid #e7ebf4!important;
+  border-top:1px solid #dde2ec!important;
 }
 .legacy-intro-consult h3{
   margin:0 0 15px!important;
@@ -85,9 +86,9 @@ const style = `
   gap:9px!important;
   min-height:0!important;
   padding:10px 11px!important;
-  border:1px solid #e8edf6!important;
+  border:1px solid #e0e5ef!important;
   border-radius:13px!important;
-  background:#fbfcff!important;
+  background:rgba(255,255,255,.62)!important;
   color:#46536f!important;
   font-size:.89rem!important;
   font-weight:600!important;
@@ -101,7 +102,7 @@ const style = `
   height:22px!important;
   margin-top:2px!important;
   border-radius:50%!important;
-  background:#eaf8f2!important;
+  background:#e6f4ef!important;
   color:#238c68!important;
   font-size:12px!important;
   font-weight:800!important;
@@ -120,7 +121,7 @@ const style = `
   box-shadow:0 10px 24px rgba(45,78,180,.14)!important;
 }
 
-/* Clean visual: no decorative circles/card, just the destination image. */
+/* Keep the image on the same visual plane as the section so supplied artwork blends in. */
 .legacy-intro-visual{
   position:relative!important;
   min-height:0!important;
@@ -131,8 +132,8 @@ const style = `
   aspect-ratio:4/3!important;
   border:0!important;
   border-radius:26px!important;
-  background:transparent!important;
-  box-shadow:0 18px 42px rgba(28,53,117,.13)!important;
+  background:#f3f4f8!important;
+  box-shadow:none!important;
   isolation:auto!important;
 }
 .legacy-intro-visual:before,
@@ -147,6 +148,7 @@ const style = `
   object-fit:cover!important;
   object-position:center!important;
   border-radius:26px!important;
+  box-shadow:none!important;
 }
 .legacy-intro-visual--portrait{
   width:min(100%,410px)!important;
@@ -154,7 +156,7 @@ const style = `
   aspect-ratio:auto!important;
   overflow:visible!important;
   border-radius:28px!important;
-  background:transparent!important;
+  background:#f3f4f8!important;
   box-shadow:none!important;
 }
 .legacy-intro-visual--portrait img{
@@ -165,7 +167,7 @@ const style = `
   margin:0 auto!important;
   object-fit:contain!important;
   border-radius:24px!important;
-  box-shadow:0 18px 42px rgba(28,53,117,.13)!important;
+  box-shadow:none!important;
 }
 
 @media (min-width:901px){
@@ -265,4 +267,4 @@ for (const slug of pages) {
   changed.push(slug);
 }
 
-console.log(`Polished destination intro images and typography on: ${changed.join(', ') || 'no pages'}.`);
+console.log(`Blended destination intro section and artwork backgrounds on: ${changed.join(', ') || 'no pages'}.`);
