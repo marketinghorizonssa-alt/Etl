@@ -67,4 +67,4 @@ jobs:
           git commit -m 'Keep Google tracking only on production Hostinger site'
           git push origin HEAD:main
 
-# Triggered intentionally after the workflow existed on the default branch.
+# Retry after repository documentation was scrubbed as well.
