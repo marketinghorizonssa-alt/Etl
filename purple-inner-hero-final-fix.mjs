@@ -2,25 +2,21 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
-if (!fs.existsSync(cssPath)) process.exit(0);
+const purpleSourcePath = path.resolve('purple-hero-image.mjs');
+if (!fs.existsSync(cssPath) || !fs.existsSync(purpleSourcePath)) process.exit(0);
 
 let css = fs.readFileSync(cssPath, 'utf8');
+const purpleSource = fs.readFileSync(purpleSourcePath, 'utf8');
 
-// Reuse the exact purple travel artwork generated for the original purple covers.
-// purple-hero-image.mjs writes it as an embedded WebP data URI earlier in the build,
-// so this final pass can apply the same artwork to legal, branch and service pages
-// without falling back to the Europe/Paris photograph.
-const sourceMarker = 'purple-travel-hero-image-v1';
-const sourceStart = css.indexOf(sourceMarker);
-const sourceCss = sourceStart >= 0 ? css.slice(sourceStart) : css;
-const imageMatch = sourceCss.match(/url\(["']?(data:image\/webp;base64,[A-Za-z0-9+/=]+)["']?\)/i);
-
+// Read the exact original purple artwork directly from the source script.
+// This avoids any dependency on earlier CSS transforms or marker state.
+const imageMatch = purpleSource.match(/const\s+heroImage\s*=\s*['"](data:image\/webp;base64,[A-Za-z0-9+/=]+)['"]/i);
 if (!imageMatch) {
-  throw new Error('Original purple generated hero image was not found in the built CSS.');
+  throw new Error('Original purple generated hero image was not found in purple-hero-image.mjs.');
 }
 
 const HERO = imageMatch[1];
-const marker = 'purple-inner-hero-final-fix-v2';
+const marker = 'purple-inner-hero-final-fix-v3';
 
 if (!css.includes(marker)) {
   css += `
@@ -73,4 +69,4 @@ if (!css.includes(marker)) {
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Applied the original purple generated travel cover to every legal, branch and service page, replacing the Europe photo.');
+console.log('Applied the original purple generated cover to every legal, branch and service page, replacing the Europe photo.');
