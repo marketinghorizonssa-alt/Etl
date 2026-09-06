@@ -2,20 +2,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
-const purpleSourcePath = path.resolve('purple-hero-image.mjs');
-if (!fs.existsSync(cssPath) || !fs.existsSync(purpleSourcePath)) process.exit(0);
+const sourcePath = path.resolve('purple-inner-hero-upload.b64');
+const assetPath = path.resolve('dist', 'assets', 'purple-inner-hero.webp');
+if (!fs.existsSync(cssPath) || !fs.existsSync(sourcePath)) process.exit(0);
+
+const encoded = fs.readFileSync(sourcePath, 'utf8').trim();
+fs.mkdirSync(path.dirname(assetPath), { recursive: true });
+fs.writeFileSync(assetPath, Buffer.from(encoded, 'base64'));
 
 let css = fs.readFileSync(cssPath, 'utf8');
-const purpleSource = fs.readFileSync(purpleSourcePath, 'utf8');
-
-// Read the exact original purple artwork directly from the source script.
-const imageMatch = purpleSource.match(/data:image\/webp;base64,[^'"\r\n]+/i);
-if (!imageMatch) {
-  throw new Error('Original purple generated hero image was not found in purple-hero-image.mjs.');
-}
-
-const HERO = imageMatch[0];
-const marker = 'purple-inner-hero-final-fix-v4';
+const marker = 'purple-inner-hero-final-fix-v5';
 
 if (!css.includes(marker)) {
   css += `
@@ -24,8 +20,8 @@ if (!css.includes(marker)) {
   position:relative!important;
   overflow:hidden!important;
   color:#fff!important;
-  background-color:#182b89!important;
-  background-image:url("${HERO}")!important;
+  background-color:#263fc6!important;
+  background-image:url("./purple-inner-hero.webp")!important;
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
@@ -51,7 +47,7 @@ if (!css.includes(marker)) {
   text-shadow:0 2px 10px rgba(0,0,0,.22)!important;
 }
 .legal-eyebrow,.service-eyebrow,.branch-page-hero .branch-label{
-  color:#b7efff!important;
+  color:#c5f3ff!important;
   text-shadow:0 2px 8px rgba(0,0,0,.22)!important;
 }
 .branch-page-hero .branch-primary-btn,
@@ -60,7 +56,7 @@ if (!css.includes(marker)) {
 }
 @media(max-width:680px){
   .legal-hero,.branch-page-hero,.service-page-hero{
-    background-image:url("${HERO}")!important;
+    background-image:url("./purple-inner-hero.webp")!important;
     background-position:center center!important;
   }
 }
@@ -68,4 +64,4 @@ if (!css.includes(marker)) {
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Applied the original purple generated cover to every legal, branch and service page, replacing the Europe photo.');
+console.log('Applied the uploaded purple Santorini cover to all legal, branch and service page heroes.');
