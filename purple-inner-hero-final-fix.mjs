@@ -2,22 +2,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
-const assetPath = path.resolve('dist', 'assets', 'purple-inner-hero.webp');
+const assetPath = path.resolve('dist', 'assets', 'purple-inner-hero-hq.webp');
+const b64Path = path.resolve('hero-hq2-part-00.b64');
+
 if (!fs.existsSync(cssPath)) process.exit(0);
-if (!fs.existsSync(assetPath)) throw new Error('purple-inner-hero.webp was not copied to dist/assets.');
+if (!fs.existsSync(b64Path)) throw new Error('HQ hero base64 source is missing.');
+
+const raw = fs.readFileSync(b64Path, 'utf8').trim();
+const image = Buffer.from(raw, 'base64');
+if (image.length < 100000 || image.subarray(0,4).toString('ascii') !== 'RIFF' || image.subarray(8,12).toString('ascii') !== 'WEBP') {
+  throw new Error(`Invalid HQ WebP asset (${image.length} bytes).`);
+}
+fs.writeFileSync(assetPath, image);
 
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'purple-inner-hero-final-fix-v7';
+const marker = 'purple-inner-hero-final-fix-v8-hq';
 
-if (!css.includes(marker)) {
-  css += `
+css += `
 /* ${marker} */
 .legal-hero,.branch-page-hero,.service-page-hero{
   position:relative!important;
   overflow:hidden!important;
   color:#fff!important;
   background-color:#263fc6!important;
-  background-image:url("./purple-inner-hero.webp")!important;
+  background-image:url("./purple-inner-hero-hq.webp?v=8")!important;
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
@@ -46,18 +54,14 @@ if (!css.includes(marker)) {
   color:#c5f3ff!important;
   text-shadow:0 2px 8px rgba(0,0,0,.22)!important;
 }
-.branch-page-hero .branch-primary-btn,
-.service-page-hero .gradient-btn{
-  box-shadow:0 10px 26px rgba(3,13,46,.16)!important;
-}
 @media(max-width:680px){
   .legal-hero,.branch-page-hero,.service-page-hero{
-    background-image:url("./purple-inner-hero.webp")!important;
-    background-position:center center!important;
+    background-image:url("./purple-inner-hero-hq.webp?v=8")!important;
+    background-position:32% center!important;
+    background-size:cover!important;
   }
 }
 `;
-  fs.writeFileSync(cssPath, css);
-}
 
-console.log('Applied the real Santorini hero asset to all legal, branch and service pages.');
+fs.writeFileSync(cssPath, css);
+console.log(`Applied HQ Santorini hero (${image.length} bytes) to legal, branch and service pages.`);
