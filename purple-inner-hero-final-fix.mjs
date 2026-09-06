@@ -4,11 +4,23 @@ import path from 'node:path';
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
 if (!fs.existsSync(cssPath)) process.exit(0);
 
-const DESKTOP = 'https://etlaala.com/wp-content/uploads/2024/03/pexels-margerretta-548077-scaled.jpg';
-const MOBILE = 'https://etlaala.com/wp-content/uploads/2024/02/pexels-roman-odintsov-8180458-scaled.jpg';
-
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'purple-inner-hero-final-fix-v1';
+
+// Reuse the exact purple travel artwork generated for the original purple covers.
+// purple-hero-image.mjs writes it as an embedded WebP data URI earlier in the build,
+// so this final pass can apply the same artwork to legal, branch and service pages
+// without falling back to the Europe/Paris photograph.
+const sourceMarker = 'purple-travel-hero-image-v1';
+const sourceStart = css.indexOf(sourceMarker);
+const sourceCss = sourceStart >= 0 ? css.slice(sourceStart) : css;
+const imageMatch = sourceCss.match(/url\(["']?(data:image\/webp;base64,[A-Za-z0-9+/=]+)["']?\)/i);
+
+if (!imageMatch) {
+  throw new Error('Original purple generated hero image was not found in the built CSS.');
+}
+
+const HERO = imageMatch[1];
+const marker = 'purple-inner-hero-final-fix-v2';
 
 if (!css.includes(marker)) {
   css += `
@@ -17,11 +29,18 @@ if (!css.includes(marker)) {
   position:relative!important;
   overflow:hidden!important;
   color:#fff!important;
-  background-color:#10245f!important;
-  background-image:linear-gradient(90deg,rgba(5,15,48,.62) 0%,rgba(8,20,65,.46) 48%,rgba(11,25,70,.34) 100%),url("${DESKTOP}")!important;
+  background-color:#182b89!important;
+  background-image:url("${HERO}")!important;
   background-size:cover!important;
-  background-position:center 48%!important;
+  background-position:center center!important;
   background-repeat:no-repeat!important;
+}
+.legal-hero:before,.legal-hero:after,
+.branch-page-hero:before,.branch-page-hero:after,
+.service-page-hero:before,.service-page-hero:after{
+  opacity:0!important;
+  background:none!important;
+  border:0!important;
 }
 .legal-hero .container,.branch-page-hero .container,.service-page-hero .container,
 .legal-hero-inner,.branch-hero-inner{
@@ -30,21 +49,15 @@ if (!css.includes(marker)) {
 }
 .legal-hero h1,.branch-page-hero h1,.service-page-hero h1{
   color:#fff!important;
-  text-shadow:0 3px 18px rgba(0,0,0,.28)!important;
+  text-shadow:0 3px 18px rgba(0,0,0,.30)!important;
 }
 .legal-hero p,.branch-page-hero p,.service-page-hero p{
-  color:rgba(255,255,255,.94)!important;
-  text-shadow:0 2px 10px rgba(0,0,0,.18)!important;
+  color:rgba(255,255,255,.96)!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.22)!important;
 }
 .legal-eyebrow,.service-eyebrow,.branch-page-hero .branch-label{
-  color:#a9edff!important;
-  text-shadow:0 2px 8px rgba(0,0,0,.16)!important;
-}
-.legal-hero:before,.branch-page-hero:before{
-  background:radial-gradient(circle,rgba(255,255,255,.10),rgba(255,255,255,0) 68%)!important;
-}
-.service-page-hero:after,.legal-hero:after,.branch-page-hero:after{
-  opacity:.58!important;
+  color:#b7efff!important;
+  text-shadow:0 2px 8px rgba(0,0,0,.22)!important;
 }
 .branch-page-hero .branch-primary-btn,
 .service-page-hero .gradient-btn{
@@ -52,12 +65,12 @@ if (!css.includes(marker)) {
 }
 @media(max-width:680px){
   .legal-hero,.branch-page-hero,.service-page-hero{
-    background-image:linear-gradient(0deg,rgba(5,15,48,.72) 0%,rgba(8,20,65,.48) 58%,rgba(10,24,69,.28) 100%),url("${MOBILE}")!important;
-    background-position:center 45%!important;
+    background-image:url("${HERO}")!important;
+    background-position:center center!important;
   }
 }
 `;
   fs.writeFileSync(cssPath, css);
 }
 
-console.log('Fixed all former purple inner-page hero covers, including legal, branch and service pages, with a valid travel image and readable neutral contrast.');
+console.log('Applied the original purple generated travel cover to every legal, branch and service page, replacing the Europe photo.');
