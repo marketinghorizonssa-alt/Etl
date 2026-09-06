@@ -68,26 +68,32 @@ if (fs.existsSync(file)) {
 
 if (fs.existsSync(cssPath)) {
   let css = fs.readFileSync(cssPath, 'utf8');
-  const marker = 'homepage-context-long-cards-v2';
+  const marker = 'homepage-context-four-column-cards-v3';
   if (!css.includes(marker)) {
     css += `
 /* ${marker} */
-.contextual-seo[data-contextual-seo="general"] .context-card-grid{grid-template-columns:1fr!important;gap:13px!important;max-width:1060px;margin:0 auto}
-.contextual-seo[data-contextual-seo="general"] .home-context-card{display:grid;grid-template-columns:minmax(235px,.72fr) minmax(0,1.55fr);gap:24px;align-items:center;padding:22px 24px!important;border-radius:18px!important}
-.contextual-seo[data-contextual-seo="general"] .home-context-card-title{padding-inline-end:22px;border-inline-end:1px solid #e7ecf6}
+.contextual-seo[data-contextual-seo="general"]>.container{max-width:1380px!important}
+.contextual-seo[data-contextual-seo="general"] .context-card-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;max-width:none!important;margin:0 auto;align-items:stretch!important}
+.contextual-seo[data-contextual-seo="general"] .home-context-card{display:flex!important;flex-direction:column;align-items:stretch;gap:14px;min-width:0;height:100%;padding:22px 20px!important;border-radius:20px!important}
+.contextual-seo[data-contextual-seo="general"] .home-context-card-title{padding:0 0 14px!important;border-inline-end:0!important;border-bottom:1px solid #e7ecf6}
 .contextual-seo[data-contextual-seo="general"] .home-context-card-title .context-card-index{margin-bottom:10px}
-.contextual-seo[data-contextual-seo="general"] .home-context-card-title h3{margin:0!important;font-size:20px!important;line-height:1.45}
-.contextual-seo[data-contextual-seo="general"] .home-context-card-copy p{margin:0 0 8px!important;color:#5f6980;font-size:15px;line-height:1.82}
+.contextual-seo[data-contextual-seo="general"] .home-context-card-title h3{margin:0!important;font-size:19px!important;line-height:1.45}
+.contextual-seo[data-contextual-seo="general"] .home-context-card-copy{flex:1}
+.contextual-seo[data-contextual-seo="general"] .home-context-card-copy p{margin:0 0 9px!important;color:#5f6980;font-size:14.5px;line-height:1.78}
 .contextual-seo[data-contextual-seo="general"] .home-context-card-copy p:last-child{margin-bottom:0!important}
 .contextual-seo[data-contextual-seo="general"] .context-faq-wrap,
 .contextual-seo[data-contextual-seo="general"] .unified-faq-section{display:none!important}
-@media(max-width:760px){
-  .contextual-seo[data-contextual-seo="general"] .home-context-card{grid-template-columns:1fr;gap:12px;padding:19px!important}
-  .contextual-seo[data-contextual-seo="general"] .home-context-card-title{padding-inline-end:0;padding-bottom:11px;border-inline-end:0;border-bottom:1px solid #e7ecf6}
+@media(max-width:1180px){
+  .contextual-seo[data-contextual-seo="general"] .context-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:680px){
+  .contextual-seo[data-contextual-seo="general"] .context-card-grid{grid-template-columns:1fr!important;gap:12px!important}
+  .contextual-seo[data-contextual-seo="general"] .home-context-card{padding:19px!important}
+  .contextual-seo[data-contextual-seo="general"] .home-context-card-title h3{font-size:18px!important}
 }
 `;
     fs.writeFileSync(cssPath, css);
   }
 }
 
-console.log('Homepage contextual content converted to long horizontal cards and homepage FAQ content merged into those cards.');
+console.log('Homepage contextual content now uses four vertical cards in one desktop row, two on tablet and one on mobile, with FAQ content merged into the cards.');
