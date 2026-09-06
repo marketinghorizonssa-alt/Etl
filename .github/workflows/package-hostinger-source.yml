@@ -1,0 +1,35 @@
+name: Package Hostinger Source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/package-hostinger-source.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package source only
+        shell: bash
+        run: |
+          zip -r hostinger-source.zip . \
+            -x '.git/*' \
+            -x 'node_modules/*' \
+            -x 'dist/*' \
+            -x '*.zip'
+
+      - name: Upload source artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hostinger-source
+          path: hostinger-source.zip
+          if-no-files-found: error
+          retention-days: 1
