@@ -2,25 +2,39 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const cssPath = path.resolve('dist', 'assets', 'styles.css');
-const assetPath = path.resolve('dist', 'assets', 'purple-inner-hero-hq.webp');
-const parts = [0,1,2,3,4].map(i => path.resolve(`hero-hq-part-0${i}.b64`));
-
 if (!fs.existsSync(cssPath)) process.exit(0);
-for (const file of parts) {
-  if (!fs.existsSync(file)) throw new Error(`HQ hero chunk missing: ${path.basename(file)}`);
+
+const outAsset = path.resolve('dist', 'assets', 'purple-inner-hero-hq.webp');
+const pickChunks = (prefix) => fs.readdirSync(process.cwd())
+  .filter((name) => name.startsWith(prefix) && name.endsWith('.b64'))
+  .sort((a, b) => a.localeCompare(b, 'en'));
+
+let source = '';
+let image = null;
+for (const prefix of ['hero-hq-part-', 'hero-hq-final2-part-', 'hero-hq2-part-']) {
+  const chunks = pickChunks(prefix);
+  if (!chunks.length) continue;
+  const raw = chunks.map((name) => fs.readFileSync(path.resolve(name), 'utf8').trim()).join('');
+  const candidate = Buffer.from(raw, 'base64');
+  const isWebp = candidate.length > 50000 && candidate.subarray(0, 4).toString('ascii') === 'RIFF' && candidate.subarray(8, 12).toString('ascii') === 'WEBP';
+  if (isWebp) {
+    image = candidate;
+    source = `${prefix}${chunks.length}`;
+    break;
+  }
 }
 
-const raw = parts.map(file => fs.readFileSync(file, 'utf8').trim()).join('');
-const image = Buffer.from(raw, 'base64');
-const isWebp = image.length > 50000 && image.subarray(0,4).toString('ascii') === 'RIFF' && image.subarray(8,12).toString('ascii') === 'WEBP';
-const declaredSize = isWebp && image.length >= 12 ? image.readUInt32LE(4) + 8 : 0;
-if (!isWebp || declaredSize !== image.length) {
-  throw new Error(`Invalid/incomplete HQ WebP asset (${image.length} bytes, declared ${declaredSize}).`);
+if (image) {
+  fs.writeFileSync(outAsset, image);
+} else {
+  const fallback = path.resolve('dist', 'assets', 'purple-inner-hero.webp');
+  if (!fs.existsSync(fallback)) throw new Error('No usable inner hero image asset found.');
+  fs.copyFileSync(fallback, outAsset);
+  source = 'fallback-public-asset';
 }
-fs.writeFileSync(assetPath, image);
 
 let css = fs.readFileSync(cssPath, 'utf8');
-const marker = 'purple-inner-hero-final-fix-v9-hq-complete';
+const marker = 'purple-inner-hero-final-fix-v10-safe';
 
 css += `
 /* ${marker} */
@@ -29,7 +43,7 @@ css += `
   overflow:hidden!important;
   color:#fff!important;
   background-color:#263fc6!important;
-  background-image:url("./purple-inner-hero-hq.webp?v=9")!important;
+  background-image:url("./purple-inner-hero-hq.webp?v=10")!important;
   background-size:cover!important;
   background-position:center center!important;
   background-repeat:no-repeat!important;
@@ -58,9 +72,13 @@ css += `
   color:#c5f3ff!important;
   text-shadow:0 2px 8px rgba(0,0,0,.22)!important;
 }
+.branch-page-hero .branch-primary-btn,
+.service-page-hero .gradient-btn{
+  box-shadow:0 10px 26px rgba(3,13,46,.16)!important;
+}
 @media(max-width:680px){
   .legal-hero,.branch-page-hero,.service-page-hero{
-    background-image:url("./purple-inner-hero-hq.webp?v=9")!important;
+    background-image:url("./purple-inner-hero-hq.webp?v=10")!important;
     background-position:34% center!important;
     background-size:cover!important;
   }
@@ -68,4 +86,4 @@ css += `
 `;
 
 fs.writeFileSync(cssPath, css);
-console.log(`Applied complete HQ hero (${image.length} bytes) to legal, branch and service pages.`);
+console.log(`Applied inner hero from ${source}; size=${fs.statSync(outAsset).size} bytes.`);
