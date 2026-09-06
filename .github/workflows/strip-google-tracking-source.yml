@@ -66,3 +66,5 @@ jobs:
           git add build.mjs .github/workflows/build-etlaala.yml
           git commit -m 'Keep Google tracking only on production Hostinger site'
           git push origin HEAD:main
+
+# Triggered intentionally after the workflow existed on the default branch.
