@@ -33,6 +33,11 @@ function plain(html='') {
   return decode(String(html).replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
 }
 function attr(html, re) { return html.match(re)?.[1] || ''; }
+function normalizePreviewPaths(html='') {
+  return String(html)
+    .replace(/\b(href|src)=(['"])(?:\/Etl)+(\/[^'"]*)\2/gi, '$1=$2$3$2')
+    .replace(/\b(href|src)=(['"])\/Etl\/?\2/gi, '$1=$2/$2');
+}
 async function getText(url) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 15000);
@@ -48,8 +53,8 @@ for (const item of selected) {
   try {
     const html = await getText(`${SNAPSHOT_BASE}/${item.slug}/`);
     const title = plain(attr(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i)) || item.slug;
-    const content = attr(html, /<div class="article-content">([\s\S]*?)<\/div>\s*<aside class="article-cta">/i);
-    const featuredImage = attr(html, /<meta property="og:image" content="([^"]*)">/i);
+    const content = normalizePreviewPaths(attr(html, /<div class="article-content">([\s\S]*?)<\/div>\s*<aside class="article-cta">/i));
+    const featuredImage = normalizePreviewPaths(attr(html, /<meta property="og:image" content="([^"]*)">/i));
     const firstP = attr(content, /<p[^>]*>([\s\S]*?)<\/p>/i);
     let date = '2026-08-10T00:00:00';
     let modified = date;
