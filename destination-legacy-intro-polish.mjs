@@ -7,9 +7,20 @@ const pages = [
   'thailand','thailand-2','bosnia-and-herzegovina','europe','turkiye','turkey-2'
 ];
 
-const turkiyeImage = 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%B1%D9%83%D9%8A%D8%A7-768x1273.webp';
-const marker = 'legacy-intro-polish-v4';
-const oldMarkers = ['legacy-intro-polish-v2', 'legacy-intro-polish-v3', 'legacy-intro-polish-v4'];
+const introImages = {
+  georgia: 'https://etlaala.com/wp-content/uploads/2025/07/%D8%AC%D9%88%D8%B1%D8%AC%D9%8A%D8%A7-1-1-768x1273.png',
+  'georgia-2': 'https://etlaala.com/wp-content/uploads/2025/07/%D8%AC%D9%88%D8%B1%D8%AC%D9%8A%D8%A7-1-1-768x1273.png',
+  maldives: 'https://etlaala.com/wp-content/uploads/2025/06/%D8%A7%D9%84%D9%85%D8%A7%D9%84%D8%AF%D9%8A%D9%81-768x1273.webp',
+  'maldives-2': 'https://etlaala.com/wp-content/uploads/2025/06/%D8%A7%D9%84%D9%85%D8%A7%D9%84%D8%AF%D9%8A%D9%81-768x1273.webp',
+  thailand: 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%A7%D9%8A%D9%84%D8%A7%D9%86%D8%AF-1-768x1273.webp',
+  'thailand-2': 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%A7%D9%8A%D9%84%D8%A7%D9%86%D8%AF-1-768x1273.webp',
+  'bosnia-and-herzegovina': 'https://etlaala.com/wp-content/uploads/2025/06/%D8%A7%D9%84%D8%A8%D9%88%D8%B3%D9%86%D8%A9-768x1273.webp',
+  turkiye: 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%B1%D9%83%D9%8A%D8%A7-768x1273.webp',
+  'turkey-2': 'https://etlaala.com/wp-content/uploads/2025/06/%D8%AA%D8%B1%D9%83%D9%8A%D8%A7-768x1273.webp'
+};
+
+const marker = 'legacy-intro-polish-v5';
+const oldMarkers = ['legacy-intro-polish-v2', 'legacy-intro-polish-v3', 'legacy-intro-polish-v4', 'legacy-intro-polish-v5'];
 
 const style = `
 <style id="${marker}">
@@ -121,7 +132,6 @@ const style = `
   box-shadow:0 10px 24px rgba(45,78,180,.14)!important;
 }
 
-/* Keep the image on the same visual plane as the section so supplied artwork blends in. */
 .legacy-intro-visual{
   position:relative!important;
   min-height:0!important;
@@ -155,7 +165,7 @@ const style = `
   justify-self:center!important;
   aspect-ratio:auto!important;
   overflow:visible!important;
-  border-radius:28px!important;
+  border-radius:0!important;
   background:#f3f4f8!important;
   box-shadow:none!important;
 }
@@ -166,7 +176,7 @@ const style = `
   max-height:520px!important;
   margin:0 auto!important;
   object-fit:contain!important;
-  border-radius:24px!important;
+  border-radius:0!important;
   box-shadow:none!important;
 }
 
@@ -234,8 +244,8 @@ const style = `
   .legacy-intro-cta{width:100%!important;min-height:46px!important}
   .legacy-intro-visual{border-radius:20px!important}
   .legacy-intro-visual img{border-radius:20px!important}
-  .legacy-intro-visual--portrait{max-width:300px!important}
-  .legacy-intro-visual--portrait img{max-height:420px!important;border-radius:20px!important}
+  .legacy-intro-visual--portrait{max-width:300px!important;border-radius:0!important}
+  .legacy-intro-visual--portrait img{max-height:420px!important;border-radius:0!important}
 }
 </style>`;
 
@@ -251,10 +261,11 @@ for (const slug of pages) {
     html = html.replace(new RegExp(`<style id=["']${oldMarker}["']>[\\s\\S]*?<\\/style>`, 'i'), '');
   }
 
-  if (slug === 'turkiye' || slug === 'turkey-2') {
+  const suppliedImage = introImages[slug];
+  if (suppliedImage) {
     html = html.replace(
       /(<figure class="legacy-intro-visual"[^>]*>[\s\S]*?<img\s+[^>]*?src=")[^"]+("[^>]*>)/i,
-      `$1${turkiyeImage}$2`
+      `$1${suppliedImage}$2`
     );
     html = html.replace(
       '<figure class="legacy-intro-visual">',
@@ -267,4 +278,4 @@ for (const slug of pages) {
   changed.push(slug);
 }
 
-console.log(`Blended destination intro section and artwork backgrounds on: ${changed.join(', ') || 'no pages'}.`);
+console.log(`Applied supplied portrait destination artwork and blended intro styling on: ${changed.join(', ') || 'no pages'}.`);
