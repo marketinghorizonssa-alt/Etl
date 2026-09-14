@@ -12,6 +12,8 @@ const europeGroup = `<div class="europe-menu-group" data-europe-menu-group="true
     <a href="/europe/france/"><span>فرنسا</span><small>باريس وديزني</small></a>
     <a href="/europe/italy/"><span>إيطاليا</span><small>روما وميلانو</small></a>
     <a href="/europe/london/"><span>لندن</span><small>عروض وبرامج لندن</small></a>
+    <a href="/europe/switzerland/"><span>سويسرا</span><small>إنترلاكن ولوسيرن</small></a>
+    <a href="/europe/poland/"><span>بولندا</span><small>وارسو وكراكوف</small></a>
   </div>
 </div>`;
 
@@ -44,6 +46,8 @@ for (const file of htmlFiles(out)) {
   const before = html;
   if (!html.includes('data-europe-menu-group="true"') && html.includes(europeAnchor)) {
     html = html.split(europeAnchor).join(europeGroup);
+  } else if (html.includes('data-europe-menu-group="true"')) {
+    html = html.replace(/<div class="europe-menu-group" data-europe-menu-group="true">[\s\S]*?<\/div>\s*<\/div>/, `${europeGroup}</div>`);
   }
   if (html.includes('data-europe-menu-group="true"') && !html.includes('id="europe-menu-pages-v1"')) {
     html = html.replace('</head>', `${style}</head>`);
