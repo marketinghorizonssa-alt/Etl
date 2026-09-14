@@ -7,6 +7,13 @@ if (!fs.existsSync(file)) process.exit(0);
 let html = fs.readFileSync(file, 'utf8');
 let changed = false;
 
+const oldCopy = 'بكجات وبرامج فيينا وزيلامسي وكابرون وسالزبورغ وهالشتات في صفحة مخصصة للنمسا.';
+const newCopy = 'بكجات وبرامج فيينا وزيلامسي وكابرون وسالزبورغ وهالشتات.';
+if (html.includes(oldCopy)) {
+  html = html.replace(oldCopy, newCopy);
+  changed = true;
+}
+
 html = html.replace(/<article\b[^>]*class="[^"]*\bdp-place\b[^"]*"[^>]*>[\s\S]*?<\/article>/g, (card) => {
   if (!card.includes('href="/europe/austria/"')) return card;
   if (card.includes('aria-label="اكتشف السياحة في النمسا"')) return card;
@@ -16,7 +23,7 @@ html = html.replace(/<article\b[^>]*class="[^"]*\bdp-place\b[^"]*"[^>]*>[\s\S]*?
 
 if (changed) {
   fs.writeFileSync(file, html);
-  console.log('Austria Europe card CTA added.');
+  console.log('Austria Europe card polished.');
 } else {
-  console.log('Austria Europe card CTA already present or card not found.');
+  console.log('Austria Europe card already polished or not found.');
 }
