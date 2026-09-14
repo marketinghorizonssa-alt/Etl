@@ -9,10 +9,18 @@ on:
       - 'package.json'
       - 'public/**'
       - '.github/workflows/build-etlaala.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '*.mjs'
+      - 'data/**'
+      - 'package.json'
+      - 'public/**'
+      - '.github/workflows/build-etlaala.yml'
   workflow_dispatch:
 
 concurrency:
-  group: build-etlaala
+  group: build-etlaala-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -59,6 +67,12 @@ jobs:
           grep -R 'seo-articles-curated-v1' dist/assets/styles.css
           test -s data/articles.json
           for p in europe georgia malaysia maldives thailand turkiye bosnia-and-herzegovina; do test -f "dist/$p/index.html"; done
+          test -f dist/europe/austria/index.html
+          grep -R 'data-premium-destination="austria"' dist/europe/austria/index.html
+          grep -R 'id="destination-quote-form"' dist/europe/austria/index.html
+          grep -R '<link rel="canonical" href="https://etlaala.net/europe/austria/"' dist/europe/austria/index.html
+          grep -R 'https://etlaala.net/europe/austria/' dist/sitemap.xml
+          grep -R '/europe/austria/' dist/europe/index.html
           for p in georgia-2 malaysia-2 maldives-2 thailand-2 turkey-2; do test ! -e "dist/$p"; done
           grep -R 'data-premium-destination="turkiye"' dist/turkiye/index.html
           for p in europe georgia malaysia maldives thailand bosnia-and-herzegovina; do grep -R 'data-premium-destination=' "dist/$p/index.html"; grep -R 'id="destination-quote-form"' "dist/$p/index.html"; done
