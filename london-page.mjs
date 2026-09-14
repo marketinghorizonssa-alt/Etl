@@ -13,7 +13,7 @@ const canonical = 'https://etlaala.net/europe/london/';
 const title = 'السياحة في لندن 2026 | عروض وبكجات وبرامج لندن | إطلالة';
 const description = 'خطط للسياحة في لندن من السعودية مع إطلالة: عروض وبكجات وبرامج لندن للعوائل والأزواج، مع فنادق وانتقالات وجدول قابل للتخصيص.';
 const whatsappHref = `https://api.whatsapp.com/send?phone=966125422331&text=${encodeURIComponent('مرحباً إطلالة، أبغى برنامج سياحي للندن')}`;
-const heroImage = 'https://etlaala.com/wp-content/uploads/2025/03/london-eye-945497_1280-1024x576.jpg';
+const heroImage = 'https://etlaala.com/wp-content/uploads/2025/03/Untitled-design-66.webp';
 const introImage = 'https://etlaala.com/wp-content/uploads/2024/08/أهم-المعالم-السياحية-في-لندن-2.webp';
 
 let europe = fs.readFileSync(europeFile, 'utf8');
@@ -82,7 +82,7 @@ const londonStyle = `<style id="london-page-polish-v1">
 </style>`;
 
 const main = `<main id="main" class="dp-page dp-eu dp-ln" data-premium-destination="london">
-<section class="dp-hero"><img src="${heroImage}" width="1024" height="576" alt="السياحة في لندن مع إطلالة" fetchpriority="high" decoding="async" loading="eager"><div class="dp-hero-overlay"></div><div class="container dp-hero-wrap"><div class="dp-hero-copy"><span class="dp-pill">لندن مع إطلالة</span><h1>السياحة في لندن بعرض وبرنامج مرتب من أول يوم</h1><p>نرتّب لك بكج لندن من السعودية حسب عدد الأيام والموسم، مع فندق مناسب وتنقلات وجدول يجمع المعالم والتسوق وتجارب العائلة أو الأزواج بدون ما يكون اليوم مزدحمًا.</p><div class="dp-actions"><a class="gradient-btn" data-track="whatsapp" href="${whatsappHref}">تواصل واتساب</a><a class="ghost-btn" data-track="call" href="tel:+966920029967">اتصل بنا</a></div></div>${formHtml}</div></section>
+<section class="dp-hero"><img src="${heroImage}" width="1600" height="499" alt="السياحة في لندن مع إطلالة" fetchpriority="high" decoding="async" loading="eager"><div class="dp-hero-overlay"></div><div class="container dp-hero-wrap"><div class="dp-hero-copy"><span class="dp-pill">لندن مع إطلالة</span><h1>السياحة في لندن بعرض وبرنامج مرتب من أول يوم</h1><p>نرتّب لك بكج لندن من السعودية حسب عدد الأيام والموسم، مع فندق مناسب وتنقلات وجدول يجمع المعالم والتسوق وتجارب العائلة أو الأزواج بدون ما يكون اليوم مزدحمًا.</p><div class="dp-actions"><a class="gradient-btn" data-track="whatsapp" href="${whatsappHref}">تواصل واتساب</a><a class="ghost-btn" data-track="call" href="tel:+966920029967">اتصل بنا</a></div></div>${formHtml}</div></section>
 <section class="legacy-destination-intro" id="plan" data-old-site-intro="true"><div class="container legacy-intro-grid"><div class="legacy-intro-content"><span class="legacy-intro-kicker">رحلتك إلى لندن مع إطلالة</span><h2>مدينة واحدة فيها أكثر من نوع رحلة</h2><p class="legacy-intro-lead">لندن مناسبة لمن يريد المعالم والتسوق والمتاحف والحدائق في رحلة واحدة. ولو تفضّل تتعامل مع شركة سياحة لترتيب لندن كاملة، نوزع الأيام حسب موقع الفندق ووقت الوصول ونوع المسافرين بدل استخدام جدول ثابت لكل الرحلات.</p><div class="legacy-intro-consult"><h3>نرتّب التفاصيل حسب أسلوب رحلتك</h3><ul><li><span aria-hidden="true">✓</span><b>عروض وبكجات لندن للعوائل والأزواج</b></li><li><span aria-hidden="true">✓</span><b>فنادق وتنقلات مرتبة حسب الجدول</b></li><li><span aria-hidden="true">✓</span><b>برامج 7 أيام أو مدد أقصر حسب الرحلة</b></li><li><span aria-hidden="true">✓</span><b>توزيع المعالم والتسوق بدون ضغط اليوم</b></li></ul><a class="gradient-btn legacy-intro-cta" href="#destination-quote-form">اطلب برنامجك</a></div></div><figure class="legacy-intro-visual london-intro-visual"><img width="1024" height="575" src="${introImage}" alt="أهم المعالم السياحية في لندن" loading="lazy" decoding="async"></figure></div></section>
 <section class="dp-section dp-soft" id="places"><div class="container"><div class="dp-heading"><span class="dp-kicker">لندن على طريقتك</span><h2>رتّب الأيام حسب المنطقة ونوع التجربة</h2><p>بدل التنقل العشوائي بين أطراف المدينة، نجمع الأماكن القريبة في نفس اليوم ونترك وقتًا كافيًا للمشي والتسوق والراحة.</p></div><div class="dp-places-grid"><article class="dp-place dp-place-1"><span>معالم كلاسيكية</span><h3>وستمنستر وبيغ بن</h3><p>منطقة مناسبة لبداية الرحلة، ومنها يمكن ترتيب جولة تشمل نهر التايمز والمعالم القريبة بدون انتقالات طويلة.</p></article><article class="dp-place dp-place-2"><span>إطلالة ونهر</span><h3>London Eye وSouth Bank</h3><p>تجربة سهلة الدمج مع يوم وسط لندن، مع مطاعم وممشى على النهر ومعالم قريبة.</p></article><article class="dp-place dp-place-3"><span>قصر وحدائق</span><h3>باكنغهام وهايد بارك</h3><p>يوم أخف يجمع الحدائق والمناطق المفتوحة ويمكن ربطه بالتسوق أو أحياء قريبة حسب الوقت.</p></article><article class="dp-place dp-place-4"><span>تسوق وأجواء مدينة</span><h3>أكسفورد ستريت وكوفنت غاردن</h3><p>مناسب لمن يضع التسوق ضمن أولويات الرحلة، مع مطاعم وتجارب مدينة يمكن توزيعها على أكثر من مساء.</p></article><article class="dp-place dp-place-5"><span>متاحف وثقافة</span><h3>المتحف البريطاني والمتاحف الكبرى</h3><p>خيار جيد للأيام الباردة أو الممطرة، ويمكن دمجه مع أحياء مركزية بدل تخصيص يوم كامل للتنقل.</p></article><article class="dp-place dp-place-6"><span>رحلة يوم</span><h3>وندسور أو أكسفورد</h3><p>للرحلات الأطول يمكن إضافة يوم خارج لندن إذا كان جدول المدينة نفسه مريحًا ولا يحتاج ضغطًا إضافيًا.</p></article></div></div></section>
 <section class="dp-programs" id="programs"><div class="container"><div class="dp-programs-head"><div><span class="dp-kicker">أفكار برامج لندن</span><h2>ابدأ من عدد الأيام ونوع المسافرين</h2></div><p>هذه أمثلة لتوزيع الرحلة، والبرنامج النهائي يتغير حسب تاريخ السفر والفندق ووقت الوصول والمغادرة.</p></div><div class="dp-program-grid"><article class="dp-program"><div class="dp-program-top"><span>01</span><small>5–6 أيام</small></div><h3>لندن المركزة</h3><p>أهم المعالم مع التسوق ووقت حر، مناسبة لأول زيارة بدون إضافة رحلات خارجية كثيرة.</p><a href="#destination-quote-form">اطلب برنامجك <b aria-hidden="true">←</b></a></article><article class="dp-program is-featured"><div class="dp-program-top"><span>02</span><small>7 أيام</small></div><h3>لندن 7 أيام</h3><p>توزيع أهدأ للمعالم والتسوق مع يوم مرن للعائلة أو رحلة خارج المدينة حسب الرغبة.</p><a href="#destination-quote-form">اطلب برنامجك <b aria-hidden="true">←</b></a></article><article class="dp-program"><div class="dp-program-top"><span>03</span><small>شخصان</small></div><h3>لندن لشخصين</h3><p>برنامج أخف يركز على موقع الفندق والمشي والتجارب المسائية، ويمكن تخصيصه لرحلة زوجين أو شهر عسل.</p><a href="#destination-quote-form">اطلب برنامجك <b aria-hidden="true">←</b></a></article></div></div></section>
@@ -91,35 +91,54 @@ const main = `<main id="main" class="dp-page dp-eu dp-ln" data-premium-destinati
 <section class="unified-faq-section" id="faq"><div class="container"><header class="unified-faq-heading"><span>أسئلة شائعة</span><h2>قبل حجز رحلتك إلى لندن</h2></header><div class="unified-faq-grid">${faqHtml}</div></div></section>
 </main>`;
 
-let london = europe.replace(/<main id="main"[\s\S]*?<\/main>/i, main);
-london = london
-  .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
-  .replace(/<meta name="description" content="[^"]*">/i, `<meta name="description" content="${description}">`)
-  .replace(/<link rel="canonical" href="[^"]*">/i, `<link rel="canonical" href="${canonical}">`)
-  .replace(/<meta property="og:title" content="[^"]*">/i, '<meta property="og:title" content="إطلالة للسفر والسياحة | لندن">')
-  .replace(/<meta property="og:description" content="[^"]*">/i, `<meta property="og:description" content="${description}">`)
-  .replace(/<meta property="og:url" content="[^"]*">/i, `<meta property="og:url" content="${canonical}">`)
-  .replace(/<meta name="twitter:title" content="[^"]*">/i, '<meta name="twitter:title" content="إطلالة للسفر والسياحة | لندن">')
-  .replace(/<meta name="twitter:description" content="[^"]*">/i, `<meta name="twitter:description" content="${description}">`)
-  .replace(/<script id="unified-destination-schema" type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script id="unified-destination-schema" type="application/ld+json">${JSON.stringify(schema)}</script>`)
-  .replace(/<body data-destination="[^"]*">/i, '<body data-destination="لندن">')
-  .replace('</head>', `${londonStyle}</head>`);
-
+const base = fs.readFileSync(europeFile, 'utf8');
+const headEnd = base.indexOf('</head>');
+const bodyStart = base.indexOf('<body');
+const bodyTagEnd = base.indexOf('>', bodyStart);
+const headerStart = base.indexOf('<header', bodyTagEnd);
+const mainStart = base.indexOf('<main', headerStart);
+const mainEnd = base.indexOf('</main>', mainStart) + '</main>'.length;
+if ([headEnd, bodyStart, bodyTagEnd, headerStart, mainStart, mainEnd].some(v => v < 0)) throw new Error('Cannot parse Europe page shell');
+let head = base.slice(0, headEnd);
+const bodyTag = '<body data-destination="لندن">';
+const header = base.slice(headerStart, mainStart);
+const tail = base.slice(mainEnd);
+head = head.replace(/<link rel="preload" as="image" fetchpriority="high" href="[^"]+">/, `<link rel="preload" as="image" fetchpriority="high" href="${heroImage}">`);
+head = head.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`)
+  .replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${description}">`)
+  .replace(/<link rel="canonical" href="[^"]+">/, `<link rel="canonical" href="${canonical}">`)
+  .replace(/<meta property="og:title" content="[^"]*">/, '<meta property="og:title" content="إطلالة للسفر والسياحة | لندن">')
+  .replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${description}">`)
+  .replace(/<meta property="og:url" content="[^"]+">/, `<meta property="og:url" content="${canonical}">`)
+  .replace(/<meta name="twitter:title" content="[^"]*">/, '<meta name="twitter:title" content="إطلالة للسفر والسياحة | لندن">')
+  .replace(/<meta name="twitter:description" content="[^"]*">/, '<meta name="twitter:description" content="السياحة في لندن من السعودية مع عروض وبكجات وبرامج مرنة للعوائل والأزواج حسب مدة الرحلة.">');
+head = head.replace(/<script id="unified-destination-schema" type="application\/ld\+json">[\s\S]*?<\/script>/, `<script id="unified-destination-schema" type="application/ld+json">${JSON.stringify(schema)}</script>`);
+head += londonStyle;
+const output = `${head}</head>${bodyTag}${header}${main}${tail}`;
 fs.mkdirSync(londonDir, { recursive: true });
-fs.writeFileSync(londonFile, london);
+fs.writeFileSync(londonFile, output);
 
-const londonCard = '<article class="dp-place dp-place-london"><span>وجهة أوروبية</span><h3><a href="/europe/london/">لندن</a></h3><p>عروض وبكجات وبرامج لندن للعوائل والأزواج، مع خطط 7 أيام وخيارات شتوية.</p><a href="/europe/london/" aria-label="اكتشف السياحة في لندن">اكتشف لندن ←</a></article>';
+const card = '<article class="dp-place dp-place-london"><span>وجهة أوروبية</span><h3><a href="/europe/london/">لندن</a></h3><p>عروض وبكجات وبرامج لندن للعوائل والأزواج، مع خطط 7 أيام وخيارات شتوية.</p><a href="/europe/london/" aria-label="اكتشف السياحة في لندن">اكتشف لندن ←</a></article>';
 if (!europe.includes('/europe/london/')) {
-  europe = europe.replace(/(<div class="dp-places-grid">)/i, `$1${londonCard}`);
+  const italyCard = /<article class="dp-place dp-place-italy">[\s\S]*?<\/article>/;
+  if (italyCard.test(europe)) europe = europe.replace(italyCard, m => `${m}${card}`);
+  else {
+    const gridClose = '</div></div></section>\n<section class="dp-programs"';
+    if (!europe.includes(gridClose)) throw new Error('Cannot find Europe places grid for London card');
+    europe = europe.replace(gridClose, `${card}</div></div></section>\n<section class="dp-programs"`);
+  }
   fs.writeFileSync(europeFile, europe);
 }
 
 if (fs.existsSync(sitemapFile)) {
   let sitemap = fs.readFileSync(sitemapFile, 'utf8');
   if (!sitemap.includes(canonical)) {
-    sitemap = sitemap.replace(/<\/urlset>\s*$/i, `<url><loc>${canonical}</loc><lastmod>2026-09-14</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url></urlset>`);
+    const entry = `<url><loc>${canonical}</loc><lastmod>2026-09-14</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>`;
+    const italyEntry = /<url><loc>https:\/\/etlaala\.net\/europe\/italy\/<\/loc>[\s\S]*?<\/url>/;
+    if (italyEntry.test(sitemap)) sitemap = sitemap.replace(italyEntry, m => `${m}\n${entry}`);
+    else sitemap = sitemap.replace('</urlset>', `${entry}\n</urlset>`);
     fs.writeFileSync(sitemapFile, sitemap);
   }
 }
 
-console.log('Created /europe/london/, linked it from /europe/, and updated sitemap.');
+console.log('London page generated with campaign-aligned intent coverage.');
