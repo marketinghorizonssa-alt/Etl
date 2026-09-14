@@ -59,3 +59,22 @@ document.addEventListener('submit',function(e){
   }).finally(function(){if(submit){submit.disabled=false;submit.textContent=oldText||'إرسال الطلب';}});
 });
 })();
+
+(function(){
+function addEuropeLinks(){
+  var items=[
+    {href:'/europe/switzerland/',name:'سويسرا',small:'إنترلاكن ولوسيرن'},
+    {href:'/europe/poland/',name:'بولندا',small:'وارسو وكراكوف'}
+  ];
+  document.querySelectorAll('.europe-menu-children').forEach(function(group){
+    items.forEach(function(item){
+      if(group.querySelector('a[href="'+item.href+'"]'))return;
+      var a=document.createElement('a');
+      a.href=item.href;
+      a.innerHTML='<span>'+item.name+'</span><small>'+item.small+'</small>';
+      group.appendChild(a);
+    });
+  });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addEuropeLinks,{once:true});else addEuropeLinks();
+})();
